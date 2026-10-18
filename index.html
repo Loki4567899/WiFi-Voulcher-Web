@@ -2,36 +2,48 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Starlink Voucher</title>
-<style>body{font-family:Arial;text-align:center;padding:20px}input,button{padding:14px;width:95%;margin:8px;font-size:18px;border-radius:10px}button{background:black;color:white}.card{border:1px solid #ddd;padding:20px;border-radius:15px;margin-top:15px}</style>
+<title>Lucky WiFi</title>
+<style>
+body{font-family:Arial;text-align:center;padding:20px;background:#f8f8f8}
+.card{background:white;padding:25px;border-radius:15px;box-shadow:0 2px 10px #ddd;margin-bottom:20px}
+input,button{padding:14px;width:95%;margin:8px 0;font-size:18px;border-radius:10px;border:1px solid #ccc}
+button{background:black;color:white;font-weight:bold}
+.admin-link{margin-top:40px;font-size:14px;color:#888;text-decoration:underline;cursor:pointer}
+.hidden{display:none}
+.voucher-item{background:#eee;padding:10px;margin:5px;border-radius:8px;font-size:14px}
+</style>
 </head>
 <body>
-<h2>Starlink WiFi Login</h2>
-<div class="card">
-<input id="code" placeholder="Enter Voucher">
+
+<h2>Lucky WiFi Login</h2>
+
+<!-- USER AREA -->
+<div class="card" id="userBox">
+<h3>Enter Voucher</h3>
+<input id="code" placeholder="e.g 4829">
 <button onclick="login()">CONNECT</button>
 <p id="status"></p>
 </div>
-<div class="card" style="background:#">
-<h3>ADMIN</h3>
-<button onclick="generate()">Generate 1 Hour Token</button>
-<p id="voucher"></p>
+
+<!-- ADMIN LOGIN LINK -->
+<p class="admin-link" onclick="showAdminLogin()">Administration Login</p>
+
+<!-- ADMIN LOGIN FORM -->
+<div class="card hidden" id="adminLoginBox">
+<h3>Admin Login</h3>
+<input id="adminPass" type="password" placeholder="Admin Password">
+<button onclick="checkAdmin()">LOGIN</button>
+<p id="adminLoginStatus"></p>
 </div>
-<script>
-function generate(){
- let c=Math.floor(1000+Math.random()*9000);
- let expiry=Date.now()+3600000;
- localStorage.setItem("V_"+c,expiry);
- document.getElementById("voucher").innerHTML="NEW CODE: <b>"+c+"</b> (1h)";
-}
-function login(){
- let c=document.getElementById("code").value;
- let e=localStorage.getItem("V_"+c);
- if(!e){document.getElementById("status").innerText="❌ Invalid";return;}
- if(Date.now()>e){document.getElementById("status").innerText="❌ Expired";return;}
- let left=Math.round((e-Date.now())/60000);
- document.getElementById("status").innerText="✅ Connected! "+left+" min left";
-}
-</script>
-</body>
-</html>
+
+<!-- ADMIN PANEL - HIDDEN UNTIL LOGIN -->
+<div class="card hidden" id="adminBox">
+<h3>Admin Panel</h3>
+<p>Generate Vouchers</p>
+<button onclick="generate(60)">Generate 1 Hour</button>
+<button onclick="generate(180)">Generate 3 Hours</button>
+<button onclick="generate(1440)">Generate 24 Hours</button>
+<p id="newVoucher"></p>
+<h4>Active Vouchers</h4>
+<div id="list"></div>
+<button style
